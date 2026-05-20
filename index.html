@@ -20,7 +20,7 @@
             font-family: 'Space Grotesk', sans-serif;
         }
 
-        /* Ambient Background Emulation */
+        /* Ambient Background Video Emulation */
         .bg-video-blur {
             position: absolute;
             inset: 0;
@@ -127,7 +127,7 @@
             pointer-events: none;
         }
 
-        /* Tab Transition System */
+        /* Tab Transition System (Slide Samping UI) */
         .content-card {
             position: absolute;
             inset: 0;
@@ -219,9 +219,9 @@
                         <div class="w-full h-full flex flex-col items-center justify-between p-1 text-center">
                             <div>
                                 <span class="text-[9px] text-zinc-400 font-web3 tracking-widest uppercase">The Grand Finale</span>
-                                <h2 class="font-serif-aesthetic italic text-zinc-800 text-base font-bold mt-1">Special Gift For Ayaaa 👑</h2>
+                                <h2 class="font-serif-aesthetic italic text-red-800 text-base font-bold mt-1">Special Gift For Ayaaa 👑</h2>
                             </div>
-                            <button onclick="event.stopPropagation(); goToStage2Text();" class="opacity-0 pointer-events-none w-full bg-gradient-to-r from-pink-400 to-pink-500 hover:from-pink-500 hover:to-pink-600 text-white font-web3 text-[8.5px] uppercase tracking-widest py-2 rounded-lg font-bold shadow-md transition-opacity duration-500 text-center mt-1">
+                            <button onclick="event.stopPropagation(); goToStage2Text();" class="opacity-0 pointer-events-none w-fit px-8 bg-gradient-to-r from-pink-400 to-pink-500 hover:from-pink-500 hover:to-pink-600 text-white font-web3 text-[8.5px] uppercase tracking-widest py-2.5 rounded-lg font-bold shadow-md transition-opacity duration-500 text-center mt-1">
                                 Buka Surat →
                             </button>
                         </div>
@@ -254,7 +254,7 @@
                 </div>
             </div>
 
-            <button onclick="goToStage3Text()" class="w-full bg-gradient-to-r from-pink-400 to-pink-500 hover:from-pink-500 hover:to-pink-600 text-white font-web3 font-semibold py-3.5 rounded-xl text-xs uppercase tracking-widest">
+            <button onclick="goToStage3Text()" class="w-fit px-8 bg-gradient-to-r from-pink-400 to-pink-500 hover:from-pink-500 hover:to-pink-600 text-white font-web3 font-semibold py-3.5 rounded-xl text-xs uppercase tracking-widest">
                 Lanjut Baca →
             </button>
         </div>
@@ -272,7 +272,7 @@
                 </p>
             </div>
 
-            <button onclick="goToStage4Gallery()" class="w-full bg-gradient-to-r from-pink-400 to-pink-500 hover:from-pink-500 hover:to-pink-600 text-white font-web3 font-semibold py-3.5 rounded-xl text-xs uppercase tracking-widest">
+            <button onclick="goToStage4Gallery()" class="w-fit px-8 bg-gradient-to-r from-pink-400 to-pink-500 hover:from-pink-500 hover:to-pink-600 text-white font-web3 font-semibold py-3.5 rounded-xl text-xs uppercase tracking-widest">
                 Buka Galeri Memori 🎞️
             </button>
         </div>
@@ -295,7 +295,7 @@
                 <div class="reveal-item polaroid-web3 bg-white w-full" style="--r: 4deg;"><img src="assets/10.jpg" class="w-full h-44 object-cover rounded-sm"></div>
             </div>
 
-            <button onclick="goToStage5()" class="w-full bg-gradient-to-r from-pink-400 to-pink-500 hover:from-pink-500 hover:to-pink-600 text-white font-web3 font-semibold py-3.5 rounded-xl text-xs uppercase tracking-widest">
+            <button onclick="goToStage5()" class="w-fit px-8 bg-gradient-to-r from-pink-400 to-pink-500 hover:from-pink-500 hover:to-pink-600 text-white font-web3 font-semibold py-3.5 rounded-xl text-xs uppercase tracking-widest">
                 See My Promise →
             </button>
         </div>
@@ -312,7 +312,7 @@
                 </div>
             </div>
 
-            <div class="bg-[#121216]/95 border border-zinc-800 rounded-2xl p-5 mb-6 text-justify w-full max-w-[290px] shadow-2xl">
+            <div class="bg-[#121216]/95 border border-zinc-800 rounded-2xl p-5 mb-6 text-justify w-full max-w-[280px] shadow-2xl">
                 <p class="text-zinc-300 text-xs leading-relaxed font-light font-sans mb-3">
                     Hari ini adalah akhir dari satu cerita besar, sekaligus lembaran pertama buat mimpi-mimpi kamu ke depannya. Jarak Pekalongan emang bikin aku gak bisa meluk dan ngasih selamat langsung ke kamu di gerbang sekolah, tapi dari sini, doa aku mengawal setiap langkah baru yang bakal kamu ambil.
                 </p>
@@ -331,7 +331,6 @@
     <script {nonce}>
         let currentStage = 0;
 
-        // FUNGSI UTAMA BUKA AMPLOP SECARA SEMPURNA & BERSIH
         function openEnvelopePerfect() {
             if (currentStage !== 0) return;
 
@@ -342,9 +341,18 @@
             const nextBtn = document.querySelector('.letter-paper button');
             const music = document.getElementById('bg-music');
 
-            // ATUR AUDIO MULAI DARI MENIT 2:35 (155 Detik) SEBELUM DI-PLAY
+            // Mobile Skip Core
+            music.load();
             music.currentTime = 155; 
-            music.play().catch(err => console.log("Music auto-skip engine triggered"));
+
+            var playPromise = music.play();
+            if (playPromise !== undefined) {
+                playPromise.then(_ => {
+                    music.currentTime = 155;
+                }).catch(err => {
+                    console.log("Mobile context managed");
+                });
+            }
 
             seal.classList.add('wax-seal-melt');
             
