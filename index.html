@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Sunrise After Your Longest Night 🎓</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght=0,400;0,600;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600&family=Space+Grotesk:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #050507;
+            overflow: hidden;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .font-serif-aesthetic {
+            font-family: 'Playfair Display', serif;
+        }
+        .font-web3 {
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        /* Ambient Background Emulation */
+        .bg-video-blur {
+            position: absolute;
+            inset: 0;
+            background-image: url('https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=1000');
+            background-size: cover;
+            background-position: center;
+            filter: grayscale(100%) brightness(15%) contrast(110%);
+            z-index: 0;
+            transform: scale(1.05);
+        }
+
+        /* STRUKTUR AMPLOP PREMIUM UTUH (100% BEBAS BOCOR) */
+        .envelope-wrapper {
+            position: relative;
+            width: 300px;
+            height: 200px;
+            perspective: 1500px;
+            z-index: 10;
+        }
+        .envelope-box {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: #991b1b;
+            border-radius: 12px;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.8);
+            z-index: 10;
+        }
+        .envelope-front-fold {
+            position: absolute;
+            inset: 0;
+            z-index: 30;
+            border-top: 100px solid transparent;
+            border-left: 150px solid #7f1d1d;
+            border-right: 150px solid #7f1d1d;
+            border-bottom: 100px solid #6b1414;
+            border-radius: 12px;
+            pointer-events: none;
+        }
+        .envelope-flap {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 0;
+            border-left: 150px solid transparent;
+            border-right: 150px solid transparent;
+            border-top: 105px solid #991b1b;
+            transform-origin: top;
+            transition: transform 0.6s ease-in-out;
+            z-index: 40;
+        }
+        .open-flap {
+            transform: rotateX(180deg);
+            z-index: 5;
+        }
+
+        /* Kertas Surat Intro di dalam amplop */
+        .letter-paper {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            width: 270px;
+            height: 100px; 
+            background: linear-gradient(135deg, #ffffff, #fdfbf7);
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 20;
+            transform: translateY(0);
+            transition: transform 1.2s cubic-bezier(0.23, 1, 0.32, 1), height 1.2s ease;
+        }
+        .letter-stage-open { 
+            transform: translateY(-150px); 
+            height: 160px;
+            z-index: 35; 
+        }
+
+        .wax-seal {
+            position: absolute;
+            top: 75px;
+            left: 125px;
+            width: 50px;
+            height: 50px;
+            background: radial-gradient(circle, #fcd34d 0%, #d97706 80%);
+            border-radius: 50%;
+            z-index: 50;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.3), inset 0 2px 4px rgba(255,255,255,0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            transition: all 0.4s ease;
+            border: 2px solid #b45309;
+            cursor: pointer;
+        }
+        .wax-seal-melt {
+            transform: scale(0) rotate(90deg);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* Tab Transition System */
+        .content-card {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateX(100%) scale(0.95);
+            transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s ease, visibility 0.8s;
+        }
+        .content-card.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(0) scale(1);
+        }
+        .content-card.exit-left {
+            opacity: 0;
+            transform: translateX(-100%) scale(0.95);
+        }
+
+        /* SCROLL FEED CONTAINER GALERI */
+        .scroll-feed-container {
+            width: 100%;
+            max-width: 320px;
+            height: 65vh;
+            overflow-y: scroll;
+            padding: 10px;
+            scroll-behavior: smooth;
+        }
+        .scroll-feed-container::-webkit-scrollbar {
+            width: 0px;
+        }
+
+        /* Efek Reveal Polaroid Pas Di-Scroll */
+        .reveal-item {
+            opacity: 0;
+            transform: translateY(50px) rotate(var(--r)) scale(0.95);
+            transition: all 0.9s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+        .reveal-item.visible {
+            opacity: 1;
+            transform: translateY(0) rotate(var(--r)) scale(1);
+        }
+
+        .polaroid-web3 {
+            background: #ffffff;
+            padding: 10px 10px 10px 10px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+            border: 1px solid #e4e4e7;
+            border-radius: 4px;
+        }
+
+        /* Sakura Falling Effect */
+        .petal {
+            position: absolute;
+            background: linear-gradient(180deg, rgba(255,182,193,0.5), rgba(217,70,239,0.1));
+            border-radius: 50% 0 50% 0;
+            pointer-events: none;
+            animation: cyberFall linear infinite;
+            z-index: 1;
+        }
+        @keyframes cyberFall {
+            0% { transform: translateY(-10vh) rotate(0deg) scale(0.8); opacity: 0; }
+            10% { opacity: 0.6; }
+            90% { opacity: 0.3; }
+            100% { transform: translateY(110vh) rotate(270deg) scale(1.1); opacity: 0; }
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen relative overflow-hidden">
+
+    <div class="bg-video-blur"></div>
+    <div id="petal-container" class="absolute inset-0 overflow-hidden pointer-events-none z-0"></div>
+
+    <audio id="bg-music" loop>
+        <source src="assets/audio.mp3" type="audio/mp3">
+    </audio>
+
+    <div class="w-full max-w-sm px-4 flex flex-col items-center justify-center relative z-10 h-screen">
+
+        <div id="envelope-wrapper-stage" class="flex flex-col items-center justify-center w-full transition-all duration-700">
+            <span class="font-web3 text-zinc-500 text-[9px] uppercase tracking-[0.3em] mb-2 text-center">Protocol Node Secured</span>
+            <h1 class="text-white text-lg font-medium text-center font-serif-aesthetic italic mb-1">"The Sunrise After"</h1>
+            <p class="text-pink-400 text-xs font-web3 tracking-widest uppercase mb-12">Your Longest Night</p>
+            
+            <div id="envelope-main-container" class="envelope-wrapper" onclick="openEnvelopePerfect()">
+                <div class="envelope-box">
+                    <div id="envelope-flap" class="envelope-flap"></div>
+                    
+                    <div id="dynamic-letter" class="letter-paper">
+                        <div class="w-full h-full flex flex-col items-center justify-between p-1 text-center">
+                            <div>
+                                <span class="text-[9px] text-zinc-400 font-web3 tracking-widest uppercase">The Grand Finale</span>
+                                <h2 class="font-serif-aesthetic italic text-zinc-800 text-base font-bold mt-1">Special Gift For Ayaaa 👑</h2>
+                            </div>
+                            <button onclick="event.stopPropagation(); goToStage2Text();" class="opacity-0 pointer-events-none w-full bg-gradient-to-r from-pink-400 to-pink-500 hover:from-pink-500 hover:to-pink-600 text-white font-web3 text-[8.5px] uppercase tracking-widest py-2 rounded-lg font-bold shadow-md transition-opacity duration-500 text-center mt-1">
+                                Buka Surat →
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="envelope-front-fold"></div>
+                </div>
+
+                <div id="wax-seal" class="wax-seal">🦅</div>
+            </div>
+            
+            <p id="helper-text" class="text-[10px] text-zinc-400 uppercase tracking-[0.25em] mt-16 text-center animate-pulse">
+                Tap the wax seal to unlock
+            </p>
+        </div>
+
+        <div id="stage-2-letter-card" class="content-card w-full flex flex-col items-center justify-center">
+            <span class="font-web3 text-pink-400 text-xs uppercase tracking-[0.25em] block mb-1">Block #01 // The Letter</span>
+            <h2 class="font-serif-aesthetic italic text-white text-2xl text-center mb-6">A Letter For You</h2>
+            
+            <div class="bg-[#121216]/95 border border-zinc-800 rounded-2xl p-5 mb-6 text-justify w-full max-w-[310px] shadow-2xl max-h-[50vh] overflow-y-auto">
+                <div class="text-zinc-300 text-xs leading-relaxed font-light font-sans space-y-3">
+                    <p class="font-semibold text-pink-400 text-sm">Sayangg, selamat wisudaa yaa 😭🤍</p>
+                    <p>Hari ini akhirnya datang juga yaa, hari yang selama ini pelan-pelan kamu jalanin sampai akhirnya beneran ada di depan mata sekarang.</p>
+                    <p>Aku tau mungkin rasanya campur aduk banget. Ada senengnya, ada deg-degannya, ada sedihnya juga karena semua berjalan cepet banget. Tau-tau sekarang udah ada di fase ini ajaa.</p>
+                    <p>Tapi dibalik semua itu, aku harap hari ini kamu juga bisa lihat seberapa hebat diri kamu sendiri. Kamu udah lewatin banyak hal buat sampai di titik ini, banyak capeknya, banyak perjuangannya, dan semuanya kebayar hari ini.</p>
+                    <p>Meskipun aku ga ada langsung disamping kamu, tapi aku ikut bangga dan ikut bahagia banget liat kamu sampai sejauh ini 🤍. Jadi hari ini nikmatin semuanya yaa sayangg.</p>
+                    <p>Nikmatin setiap momennya, suasananya, orang-orangnya, dan semua hal kecil yang nanti bakal jadi kenangan buat kamu. Dan kalo nanti kamu nangis, gapapaa banget 😭 karena itu tandanya perjalanan ini bener-bener berarti buat kamu.</p>
+                    <p>Sekali lagi, aku bangga banget sama kamu. Selamat wisuda sayangg 🤍</p>
+                </div>
+            </div>
+
+            <button onclick="goToStage3Text()" class="w-full bg-gradient-to-r from-pink-400 to-pink-500 hover:from-pink-500 hover:to-pink-600 text-white font-web3 font-semibold py-3.5 rounded-xl text-xs uppercase tracking-widest">
+                Lanjut Baca →
+            </button>
+        </div>
+
+        <div id="stage-3-text-card" class="content-card w-full flex flex-col items-center justify-center">
+            <span class="font-web3 text-pink-400 text-xs uppercase tracking-[0.25em] block mb-1">Block #02 // The Monologue</span>
+            <h2 class="font-serif-aesthetic italic text-white text-2xl text-center mb-6">Elegance In Black</h2>
+            
+            <div class="bg-[#121216]/90 border border-zinc-800 rounded-2xl p-5 mb-8 text-justify w-full max-w-[300px] shadow-2xl">
+                <p class="text-zinc-300 text-xs leading-relaxed font-light font-sans mb-3">
+                    Katanya hari ini di sekolah tema-nya dominan warna biru tapi kamu diwajibkan pake abaya hitam? Hehe dengerin aku ya, hitam itu warna kemewahan tertinggi di ekosistem mana pun. 
+                </p>
+                <p class="text-zinc-300 text-xs leading-relaxed font-light font-sans">
+                    Di tengah warna tema sekolah yang biasa, balutan abaya hitam kamu justru bakal bikin kamu keliatan paling mahal, paling anggun, dan paling mencolok di depan kamera. Kamu bukan sekadar lulus, kamu memenangkan harinya dengan caramu sendiri.
+                </p>
+            </div>
+
+            <button onclick="goToStage4Gallery()" class="w-full bg-gradient-to-r from-pink-400 to-pink-500 hover:from-pink-500 hover:to-pink-600 text-white font-web3 font-semibold py-3.5 rounded-xl text-xs uppercase tracking-widest">
+                Buka Galeri Memori 🎞️
+            </button>
+        </div>
+
+        <div id="stage-4-card" class="content-card w-full flex flex-col items-center justify-center">
+            <span class="font-web3 text-pink-400 text-xs uppercase tracking-[0.25em] block mb-1">Block #03 // Archive Feed</span>
+            <h2 class="font-serif-aesthetic italic text-white text-xl text-center mb-1">The Sweetest Captures</h2>
+            <p class="font-serif-aesthetic italic text-zinc-500 text-[10px] text-center mb-4">Scroll kebawah pelan-pelan untuk membuka memori...</p>
+            
+            <div id="scroll-feed" class="scroll-feed-container space-y-8 mb-4">
+                <div class="reveal-item polaroid-web3 bg-white w-full" style="--r: -4deg;"><img src="assets/1.jpg" class="w-full h-44 object-cover rounded-sm"></div>
+                <div class="reveal-item polaroid-web3 bg-white w-full" style="--r: 5deg;"><img src="assets/2.jpg" class="w-full h-44 object-cover rounded-sm"></div>
+                <div class="reveal-item polaroid-web3 bg-white w-full" style="--r: -5deg;"><img src="assets/3.jpg" class="w-full h-44 object-cover rounded-sm"></div>
+                <div class="reveal-item polaroid-web3 bg-white w-full" style="--r: 4deg;"><img src="assets/4.jpg" class="w-full h-44 object-cover rounded-sm"></div>
+                <div class="reveal-item polaroid-web3 bg-white w-full" style="--r: -6deg;"><img src="assets/5.jpg" class="w-full h-44 object-cover rounded-sm"></div>
+                <div class="reveal-item polaroid-web3 bg-white w-full" style="--r: 6deg;"><img src="assets/6.jpg" class="w-full h-44 object-cover rounded-sm"></div>
+                <div class="reveal-item polaroid-web3 bg-white w-full" style="--r: -4deg;"><img src="assets/7.jpg" class="w-full h-44 object-cover rounded-sm"></div>
+                <div class="reveal-item polaroid-web3 bg-white w-full" style="--r: 5deg;"><img src="assets/8.jpg" class="w-full h-44 object-cover rounded-sm"></div>
+                <div class="reveal-item polaroid-web3 bg-white w-full" style="--r: -5deg;"><img src="assets/9.jpg" class="w-full h-44 object-cover rounded-sm"></div>
+                <div class="reveal-item polaroid-web3 bg-white w-full" style="--r: 4deg;"><img src="assets/10.jpg" class="w-full h-44 object-cover rounded-sm"></div>
+            </div>
+
+            <button onclick="goToStage5()" class="w-full bg-gradient-to-r from-pink-400 to-pink-500 hover:from-pink-500 hover:to-pink-600 text-white font-web3 font-semibold py-3.5 rounded-xl text-xs uppercase tracking-widest">
+                See My Promise →
+            </button>
+        </div>
+
+        <div id="stage-5-card" class="content-card w-full flex flex-col items-center justify-center overflow-y-auto max-h-[90vh] py-4">
+            
+            <div class="polaroid-web3 w-64 bg-white mb-6 relative shadow-2xl">
+                <div class="w-full h-40 bg-zinc-900 relative flex items-center justify-center">
+                    <img src="assets/final.jpg" class="w-full h-full object-cover rounded-sm">
+                </div>
+                <div class="pt-3 pb-1 text-center">
+                    <h3 class="font-serif-aesthetic text-xl font-bold text-zinc-800 italic">Haya Abidah</h3>
+                    <p class="text-[8px] text-pink-400 font-web3 tracking-widest uppercase mt-0.5">The Pure Elegant Queen</p>
+                </div>
+            </div>
+
+            <div class="bg-[#121216]/95 border border-zinc-800 rounded-2xl p-5 mb-6 text-justify w-full max-w-[290px] shadow-2xl">
+                <p class="text-zinc-300 text-xs leading-relaxed font-light font-sans mb-3">
+                    Hari ini adalah akhir dari satu cerita besar, sekaligus lembaran pertama buat mimpi-mimpi kamu ke depannya. Jarak Pekalongan emang bikin aku gak bisa meluk dan ngasih selamat langsung ke kamu di gerbang sekolah, tapi dari sini, doa aku mengawal setiap langkah baru yang bakal kamu ambil.
+                </p>
+                <p class="text-zinc-300 text-xs leading-relaxed font-light font-sans">
+                    Apapun dunia perkuliahan atau jalan baru yang mau kamu tempuh nanti, inget satu hal ya, sayang: kamu punya aku yang bakal selalu berdiri paling depan buat ngejaga, nemenin capek kamu, dan jadi fans nomor satu kamu sampai kapan pun. *I'm so incredibly proud of you, and I love you always*, Cantik.
+                </p>
+            </div>
+
+            <button onclick="resetApplication()" class="text-zinc-500 hover:text-zinc-400 text-[9px] uppercase tracking-widest font-web3 bg-zinc-950 border border-zinc-800/80 px-6 py-2.5 rounded-xl transition-all">
+                Replay Journey 🔄
+            </button>
+        </div>
+
+    </div>
+
+    <script {nonce}>
+        let currentStage = 0;
+
+        // FUNGSI UTAMA BUKA AMPLOP SECARA SEMPURNA & BERSIH
+        function openEnvelopePerfect() {
+            if (currentStage !== 0) return;
+
+            const seal = document.getElementById('wax-seal');
+            const flap = document.getElementById('envelope-flap');
+            const letter = document.getElementById('dynamic-letter');
+            const helperText = document.getElementById('helper-text');
+            const nextBtn = document.querySelector('.letter-paper button');
+            const music = document.getElementById('bg-music');
+
+            // ATUR AUDIO MULAI DARI MENIT 2:35 (155 Detik) SEBELUM DI-PLAY
+            music.currentTime = 155; 
+            music.play().catch(err => console.log("Music auto-skip engine triggered"));
+
+            seal.classList.add('wax-seal-melt');
+            
+            setTimeout(() => {
+                flap.classList.add('open-flap');
+                
+                setTimeout(() => {
+                    letter.classList.add('letter-stage-open');
+                    
+                    setTimeout(() => {
+                        nextBtn.classList.remove('opacity-0', 'pointer-events-none');
+                        nextBtn.classList.add('opacity-100');
+                    }, 500);
+
+                    helperText.innerText = "Klik tombol Buka Surat untuk masuk ke lembar tulisan";
+                    currentStage = 1;
+                }, 400);
+            }, 300);
+        }
+
+        function goToStage2Text() {
+            document.getElementById('envelope-wrapper-stage').classList.add('exit-left');
+            setTimeout(() => {
+                document.getElementById('envelope-wrapper-stage').style.display = 'none';
+                document.getElementById('stage-2-letter-card').classList.add('active');
+            }, 650);
+        }
+
+        function goToStage3Text() {
+            document.getElementById('stage-2-letter-card').classList.remove('active');
+            document.getElementById('stage-2-letter-card').classList.add('exit-left');
+            setTimeout(() => {
+                document.getElementById('stage-2-letter-card').style.display = 'none';
+                document.getElementById('stage-3-text-card').classList.add('active');
+            }, 650);
+        }
+
+        function goToStage4Gallery() {
+            document.getElementById('stage-3-text-card').classList.remove('active');
+            document.getElementById('stage-3-text-card').classList.add('exit-left');
+            setTimeout(() => {
+                document.getElementById('stage-3-text-card').style.display = 'none';
+                document.getElementById('stage-4-card').classList.add('active');
+                initScrollReveal();
+            }, 650);
+        }
+
+        function goToStage5() {
+            document.getElementById('stage-4-card').classList.remove('active');
+            document.getElementById('stage-4-card').classList.add('exit-left');
+            setTimeout(() => {
+                document.getElementById('stage-4-card').style.display = 'none';
+                document.getElementById('stage-5-card').classList.add('active');
+                burstPetals();
+            }, 650);
+        }
+
+        function resetApplication() {
+            location.reload();
+        }
+
+        function initScrollReveal() {
+            const scrollContainer = document.getElementById('scroll-feed');
+            const items = document.querySelectorAll('.reveal-item');
+
+            function checkReveal() {
+                const containerHeight = scrollContainer.clientHeight;
+                items.forEach(item => {
+                    const itemTop = item.getBoundingClientRect().top - scrollContainer.getBoundingClientRect().top;
+                    if (itemTop < containerHeight - 30) {
+                        if (!item.classList.contains('visible')) {
+                            item.classList.add('visible');
+                        }
+                    }
+                });
+            }
+            scrollContainer.addEventListener('scroll', checkReveal);
+            setTimeout(checkReveal, 150);
+        }
+
+        // Sakura Engine
+        function createPetal() {
+            const container = document.getElementById('petal-container');
+            if (!container) return;
+            
+            const petal = document.createElement('div');
+            petal.className = 'petal';
+            
+            const size = Math.random() * 10 + 6 + 'px';
+            petal.style.width = size;
+            petal.style.height = size;
+            petal.style.left = Math.random() * 100 + 'vw';
+            petal.style.animationDuration = Math.random() * 3 + 3 + 's';
+            
+            container.appendChild(petal);
+            setTimeout(() => { petal.remove(); }, 6000);
+        }
+        setInterval(createPetal, 350);
+
+        function burstPetals() {
+            for(let i=0; i<30; i++) {
+                setTimeout(createPetal, i * 40);
+            }
+        }
+    </script>
+</body>
+</html>
